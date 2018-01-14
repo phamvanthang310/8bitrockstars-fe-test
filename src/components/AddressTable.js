@@ -5,8 +5,10 @@ import PropTypes from 'prop-types'
 export class AddressTable extends React.PureComponent {
   constructor(props) {
     super(props);
+  }
 
-    console.log(props);
+  componentDidMount() {
+    this.props.actions.fetchAddresses();
   }
 
   render() {
@@ -35,17 +37,18 @@ export class AddressTable extends React.PureComponent {
 
   renderAddressRow(addresses) {
     return addresses.map(address => (
-      <TableRow>
+      <TableRow key={address.key}>
         <TableRowColumn>{address.street}</TableRowColumn>
         <TableRowColumn>{address.ward}</TableRowColumn>
         <TableRowColumn>{address.district}</TableRowColumn>
         <TableRowColumn>{address.city}</TableRowColumn>
         <TableRowColumn>{address.country}</TableRowColumn>
       </TableRow>
-    ))
+    ));
   }
 }
 
 AddressTable.propertyTypes = {
-  addresses: PropTypes.array.isRequired
+  addresses: PropTypes.array.isRequired,
+  actions: PropTypes.object.isRequired
 };

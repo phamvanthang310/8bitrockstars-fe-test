@@ -14,7 +14,7 @@ const Home = ({addresses, actions}) => (
     <NavBar/>
     <MainSection title='Address Management'>
       <AddressInput actions={actions}/>
-      <AddressTable addresses={addresses}/>
+      <AddressTable addresses={addresses} actions={actions}/>
     </MainSection>
     <Footer/>
   </Fragment>

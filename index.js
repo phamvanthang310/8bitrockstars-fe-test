@@ -7,9 +7,10 @@ import { MuiThemeProvider } from 'material-ui/styles/index';
 import { darkBlack } from 'material-ui/styles/colors';
 import './assets/styles/index.scss';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
+import { applyMiddleware, createStore } from 'redux';
 import rootReducer from './src/reducers';
 import Home from './src/containers/Home';
+import { epicMiddleware } from './src/middlewares';
 
 const muiTheme = {
   palette: {
@@ -18,7 +19,7 @@ const muiTheme = {
   }
 };
 
-const store = createStore(rootReducer);
+const store = createStore(rootReducer, applyMiddleware(epicMiddleware));
 
 ReactDOM.render(
   <Provider store={store}>

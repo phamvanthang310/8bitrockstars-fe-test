@@ -7,7 +7,14 @@ import PropTypes from 'prop-types'
 export class AddressInput extends React.PureComponent {
   constructor(props) {
     super(props);
-
+    // console.log(FireBaseClient.writeAddress({
+    //   street: 'street2',
+    //   ward: 'ward2',
+    //   district: 'district2',
+    //   city: 'city2',
+    //   country: 'country2'
+    // }));
+    // console.log(FireBaseClient.readAddresses());
     console.log('AddressInput', props);
   }
 
