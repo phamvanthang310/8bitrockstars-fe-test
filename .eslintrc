@@ -1,0 +1,59 @@
+{
+  "parser": "babel-eslint",
+  "rules": {
+    "comma-dangle": [
+      "error",
+      "never"
+    ],
+    "no-underscore-dangle": [
+      "error",
+      {
+        "allowAfterThis": true
+      }
+    ],
+    "import/no-extraneous-dependencies": "off",
+    "import/no-unresolved": "off",
+    "import/extensions": "off",
+    "linebreak-style": "off",
+    "max-len": [
+      "error",
+      200
+    ],
+    "no-plusplus": "off",
+    "prefer-rest-params": "off",
+    "no-trailing-spaces": [
+      "warn"
+    ],
+    "no-multiple-empty-lines": [
+      "warn",
+      {
+        "max": 1
+      }
+    ],
+    "no-param-reassign": [
+      "error",
+      {
+        "props": false
+      }
+    ],
+    "spaced-comment": [
+      "warn",
+      "always"
+    ],
+    "space-before-function-paren": "off",
+    "space-before-blocks": [
+      "warn",
+      "always"
+    ],
+    "no-restricted-imports": [
+      "warn"
+    ],
+    "func-names": "off",
+    "sort-imports": "off",
+    "no-console": [
+      "error"
+    ],
+    "no-unused-expressions": "off",
+    "newline-per-chained-call": 2
+  }
+}
