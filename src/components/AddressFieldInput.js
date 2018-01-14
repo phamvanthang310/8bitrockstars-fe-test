@@ -1,22 +1,14 @@
 import { Col, Row } from 'react-grid-system';
 import React from 'react';
-import { RaisedButton, TextField } from 'material-ui';
+import { TextField } from 'material-ui';
+import PropTypes from 'prop-types'
 
 export class AddressFieldInput extends React.PureComponent {
 
   constructor(props) {
     super(props);
 
-    this.state = {
-      street: '',
-      ward: '',
-      district: '',
-      city: '',
-      country: ''
-    };
-    console.log('AddressFieldInput', props);
-
-    this.handleSaveAddress = this.handleSaveAddress.bind(this);
+    this.state = props.address;
     this.handleInputChange = this.handleInputChange.bind(this);
   }
 
@@ -28,13 +20,12 @@ export class AddressFieldInput extends React.PureComponent {
     this.setState({
       [name]: value
     });
+    // TODO: Revise call because .setState is asynchronous
+    this.props.onChange(this.state);
   }
 
-  handleSaveAddress() {
+  validateInput() {
     // TODO: implement validator
-    console.log(this.props);
-    console.log(this.state);
-    this.props.actions.addAddress(this.state);
   }
 
   render() {
@@ -45,7 +36,6 @@ export class AddressFieldInput extends React.PureComponent {
         <Col xs={12}>
           <TextField
             fullWidth={true} hintText="Street Name" name='street' onChange={this.handleInputChange} value={street}
-            // value={this.address.street}
             // errorText="This field is required"
           />
         </Col>
@@ -73,11 +63,12 @@ export class AddressFieldInput extends React.PureComponent {
             // errorText="This field is required"
           />
         </Col>
-        <Col>
-          <RaisedButton style={{marginTop: '15px'}} primary={true} label="Add" fullWidth={true}
-                        onClick={this.handleSaveAddress}/>
-        </Col>
       </Row>
     );
   }
 }
+
+AddressFieldInput.propertyTypes = {
+  address: PropTypes.object.isRequired,
+  onChange: PropTypes.func.isRequired
+};

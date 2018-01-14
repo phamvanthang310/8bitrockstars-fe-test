@@ -5,10 +5,19 @@ import PropTypes from 'prop-types'
 export class AddressTable extends React.PureComponent {
   constructor(props) {
     super(props);
+
+    this.selectedAddress = {};
+    this.handleRowSelection = this.handleRowSelection.bind(this);
   }
 
   componentDidMount() {
     this.props.actions.fetchAddresses();
+  }
+
+  handleRowSelection(event) {
+    const index = event[0];
+    this.selectedAddress = this.props.addresses[index];
+    console.log(this.selectedAddress);
   }
 
   render() {
@@ -17,8 +26,8 @@ export class AddressTable extends React.PureComponent {
     return (
       <Fragment>
         <h4>Available Addresses</h4>
-        <Table selectable={false}>
-          <TableHeader adjustForCheckbox={false} displaySelectAll={false}>
+        <Table onRowSelection={this.handleRowSelection}>
+          <TableHeader>
             <TableRow>
               <TableHeaderColumn>Street Name</TableHeaderColumn>
               <TableHeaderColumn>Ward</TableHeaderColumn>
@@ -27,7 +36,7 @@ export class AddressTable extends React.PureComponent {
               <TableHeaderColumn>Country</TableHeaderColumn>
             </TableRow>
           </TableHeader>
-          <TableBody displayRowCheckbox={false}>
+          <TableBody showRowHover={true}>
             {this.renderAddressRow(addresses)}
           </TableBody>
         </Table>

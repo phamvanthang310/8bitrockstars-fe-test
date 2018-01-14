@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { Tab, Tabs } from 'material-ui';
+import { Dialog, FlatButton, RaisedButton, Tab, Tabs } from 'material-ui';
 import { AddressFieldInput } from './AddressFieldInput';
 import { AddressMapInput } from './AddressMapInput';
 import PropTypes from 'prop-types'
@@ -7,30 +7,68 @@ import PropTypes from 'prop-types'
 export class AddressInput extends React.PureComponent {
   constructor(props) {
     super(props);
-    // console.log(FireBaseClient.writeAddress({
-    //   street: 'street2',
-    //   ward: 'ward2',
-    //   district: 'district2',
-    //   city: 'city2',
-    //   country: 'country2'
-    // }));
-    // console.log(FireBaseClient.readAddresses());
-    console.log('AddressInput', props);
+    this.state = {
+      isDialogOpen: false,
+      address: {
+        street: '',
+        ward: '',
+        district: '',
+        city: '',
+        country: ''
+      }
+    };
+
+    this.handleAddNewAddressClick = this.handleAddNewAddressClick.bind(this);
+    this.handleCancelClick = this.handleCancelClick.bind(this);
+    this.handleSaveClick = this.handleSaveClick.bind(this);
+    this.handleAddressInput = this.handleAddressInput.bind(this);
+  }
+
+  handleAddNewAddressClick() {
+    this.setState({
+      isDialogOpen: true
+    });
+  }
+
+  handleCancelClick() {
+    this.setState({
+      isDialogOpen: false
+    })
+  }
+
+  handleSaveClick() {
+    console.log(this.state.address);
+  }
+
+  handleAddressInput(address) {
+    console.log('handleAddressInput', address);
+    this.setState({address});
   }
 
   render() {
+    const actions = [
+      <FlatButton label="Cancel" primary={false} onClick={this.handleCancelClick}/>,
+      <FlatButton label="Save" primary={true} onClick={this.handleSaveClick}/>,
+    ];
+
     return (
       <Fragment>
-        <h4>Address Input</h4>
-        <p>Select a method you want to add new address: </p>
-        <Tabs>
-          <Tab label="Field Input">
-            <AddressFieldInput actions={this.props.actions}/>
-          </Tab>
-          <Tab label="Map Input">
-            <AddressMapInput/>
-          </Tab>
-        </Tabs>
+        <RaisedButton secondary={true} label='Add new address' onClick={this.handleAddNewAddressClick}/>
+        <Dialog
+          title="Add New Address"
+          actions={actions}
+          modal={true}
+          open={this.state.isDialogOpen}>
+          <p>Select a method you want to add: </p>
+          <Tabs>
+            <Tab label="Field Input">
+              <AddressFieldInput address={this.state.address} onChange={this.handleAddressInput}/>
+            </Tab>
+            <Tab label="Map Input">
+              <AddressMapInput/>
+            </Tab>
+          </Tabs>
+        </Dialog>
       </Fragment>
     );
   }

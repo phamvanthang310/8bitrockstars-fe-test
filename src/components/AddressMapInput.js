@@ -7,6 +7,8 @@ export class AddressMapInput extends React.PureComponent {
     super(props);
     this.mapEl = {};
     this.error = '';
+
+    this.handleUseMyCurrentLocation = this.handleUseMyCurrentLocation.bind(this);
   }
 
   componentDidMount() {
@@ -17,18 +19,18 @@ export class AddressMapInput extends React.PureComponent {
   }
 
   initGoogleMap(position) {
-    let googleMap = new window.google.maps.Map(this.mapEl, {
+    this.googleMap = new window.google.maps.Map(this.mapEl, {
       center: position,
       zoom: 13
     });
 
-    let marker = new window.google.maps.Marker({
+    this.marker = new window.google.maps.Marker({
       position,
-      map: googleMap,
+      map: this.googleMap,
       title: 'Click to zoom'
     });
 
-    googleMap.addListener('click', (event) => this.handleClickEvent(googleMap, marker, event));
+    this.googleMap.addListener('click', (event) => this.handleSelectPosition(this.googleMap, this.marker, event));
   }
 
   getCurrentLocation() {
@@ -46,19 +48,27 @@ export class AddressMapInput extends React.PureComponent {
     });
   }
 
-  handleClickEvent(googleMap, marker, event) {
+  handleSelectPosition(googleMap, marker, event) {
     const latLng = event.latLng.toJSON();
     console.log(latLng);
 
     marker.setPosition(latLng)
   }
 
+  handleUseMyCurrentLocation() {
+    this.getCurrentLocation().then(position => {
+      console.log('handleUseMyCurrentLocation: ', position);
+      this.googleMap.panTo(position);
+      this.marker.setPosition(position);
+    })
+  }
+
   render() {
     return (
       <Fragment>
         <div className='map-view' ref={(el) => this.mapEl = el}/>
-        <RaisedButton style={{marginTop: '15px'}} primary={true} label="Use My Location"/>
-        <RaisedButton style={{marginTop: '15px'}} primary={true} label="Add Marked Location"/>
+        <RaisedButton style={{marginTop: '15px'}} primary={true} label="Use My Location"
+                      onClick={this.handleUseMyCurrentLocation}/>
       </Fragment>
     );
   }
