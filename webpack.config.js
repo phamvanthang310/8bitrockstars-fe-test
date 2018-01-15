@@ -1,4 +1,5 @@
 const {resolve} = require('path');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   entry: './index.js',
@@ -6,7 +7,7 @@ module.exports = {
   output: {
     path: resolve(__dirname, './dist'),
     filename: 'main.bundle.js',
-    publicPath: '/dist/'
+    publicPath: '/'
   },
   devtool: 'inline-source-map',
   devServer: {
@@ -31,6 +32,10 @@ module.exports = {
       {
         test: /\.scss$/,
         loaders: ['style-loader', 'css-loader', 'sass-loader']
+      },
+      {
+        test: /\.html$/,
+        loader: 'html-loader'
       }
     ]
   },
@@ -38,5 +43,11 @@ module.exports = {
     aggregateTimeout: 300,
     poll: 1000
   },
-  plugins: []
+  plugins: [
+    new HtmlWebpackPlugin({
+      filename: 'index.html',
+      template: './index.html',
+      hash: true
+    })
+  ]
 };
