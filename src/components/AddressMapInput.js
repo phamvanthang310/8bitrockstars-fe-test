@@ -5,9 +5,8 @@ export class AddressMapInput extends React.PureComponent {
 
   constructor(props) {
     super(props);
-    this.mapEl = {};
-    this.error = '';
 
+    this.mapEl = {};
     this.handleUseMyCurrentLocation = this.handleUseMyCurrentLocation.bind(this);
   }
 
