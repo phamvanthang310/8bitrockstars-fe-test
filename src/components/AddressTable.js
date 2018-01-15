@@ -6,25 +6,23 @@ export class AddressTable extends React.PureComponent {
   constructor(props) {
     super(props);
     this.selectedAddress = {};
-    this.handleRowSelection = this.handleRowSelection.bind(this);
   }
 
   componentDidMount() {
     this.props.actions.fetchAddresses();
   }
 
-  handleRowSelection(event) {
+  handleRowSelection = (event) => {
     const index = event[0];
     const address = this.props.addresses[index];
     this.props.actions.selectAddress(address);
-  }
+  };
 
   render() {
     const addresses = this.props.addresses;
 
     return (
       <Fragment>
-        <h4>Available Addresses</h4>
         <Table onRowSelection={this.handleRowSelection}>
           <TableHeader>
             <TableRow>

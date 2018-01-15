@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { Dialog, FlatButton, RaisedButton, Tab, Tabs } from 'material-ui';
+import { Dialog, FlatButton, FontIcon, RaisedButton, Tab, Tabs } from 'material-ui';
 import { AddressFieldInput } from './AddressFieldInput';
 import { AddressMapInput } from './AddressMapInput';
 import PropTypes from 'prop-types'
@@ -15,9 +15,17 @@ const initialAddress = {
 
 class AddressInput extends React.PureComponent {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      isDialogOpen: false,
+      isValid: false,
+      address: Object.assign({}, initialAddress)
+    };
+  };
+
   handleSaveClick = () => {
     if (this.state.isValid) {
-      console.log(this.state.address);
       this.props.actions.saveAddress(this.state.address);
       this.setState({
         isDialogOpen: false,
@@ -51,15 +59,6 @@ class AddressInput extends React.PureComponent {
     this.setState({address});
   };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      isDialogOpen: false,
-      isValid: false,
-      address: Object.assign({}, initialAddress)
-    };
-  };
-
   handleValid = (isValid) => {
     this.setState({
       isValid
@@ -75,9 +74,13 @@ class AddressInput extends React.PureComponent {
 
     return (
       <Fragment>
-        <RaisedButton secondary={true} label='Add new address' onClick={this.handleAddNewAddressClick}/>
-        <RaisedButton secondary={true} label='Edit selected address' onClick={this.handleSelectedAddress}
-                      disabled={!selectedAddress.key}/>
+        <div className='button-group'>
+          <RaisedButton secondary={true} label='Add new address' onClick={this.handleAddNewAddressClick}
+                        icon={<FontIcon className="fa fa-plus-circle"/>}/>
+          <RaisedButton style={{marginLeft: '10px'}} secondary={true} label='Edit selected address'
+                        onClick={this.handleSelectedAddress}
+                        disabled={!selectedAddress.key} icon={<FontIcon className="fa fa-edit"/>}/>
+        </div>
         <Dialog
           title="Add New Address"
           actions={actions}

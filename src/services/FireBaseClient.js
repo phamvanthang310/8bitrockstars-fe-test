@@ -33,12 +33,12 @@ class FireBaseClient {
 
   writeAddress(address) {
     if (address.key) {
-      // Update data
+      // Update address
       const updates = {};
       updates[`/addresses/${address.key}`] = address;
       return Observable.fromPromise(this.database.ref().update(updates));
     }
-    // Add data
+    // Add address
     const addressRef = this.database.ref('/addresses').push();
     return Observable.fromPromise(addressRef.set(address))
       .pipe(

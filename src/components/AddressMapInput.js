@@ -7,7 +7,6 @@ export class AddressMapInput extends React.PureComponent {
     super(props);
 
     this.mapEl = {};
-    this.handleUseMyCurrentLocation = this.handleUseMyCurrentLocation.bind(this);
   }
 
   componentDidMount() {
@@ -47,12 +46,12 @@ export class AddressMapInput extends React.PureComponent {
     });
   }
 
-  handleSelectPosition(googleMap, marker, event) {
+  handleSelectPosition = (googleMap, marker, event) => {
     const latLng = event.latLng.toJSON();
     console.log(latLng);
 
     marker.setPosition(latLng)
-  }
+  };
 
   handleUseMyCurrentLocation() {
     this.getCurrentLocation().then(position => {
@@ -66,7 +65,7 @@ export class AddressMapInput extends React.PureComponent {
     return (
       <Fragment>
         <div className='map-view' ref={(el) => this.mapEl = el}/>
-        <RaisedButton style={{marginTop: '15px'}} primary={true} label="Use My Location"
+        <RaisedButton style={{marginTop: '15px'}} secondary={true} label="Use My Location"
                       onClick={this.handleUseMyCurrentLocation}/>
       </Fragment>
     );

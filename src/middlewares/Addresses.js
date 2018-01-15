@@ -1,5 +1,5 @@
-import { ADD_ADDRESS, FETCH_ADDRESSES } from '../constants/ActionTypes';
-import { fullFillAddresses, saveAddressFinished } from '../actions';
+import { FETCH_ADDRESSES, SAVE_ADDRESS } from '../constants/ActionTypes';
+import { fullFillAddresses, saveAddressFinished, updateAddressFinished } from '../actions';
 import FireBaseClient from '../services/FireBaseClient';
 import { mergeMap } from 'rxjs/operators';
 
@@ -15,12 +15,15 @@ export const fetchAddressesEpic = (action$, store) => {
 };
 
 export const saveAddressEpic = (actions$, store) => {
-  return actions$.ofType(ADD_ADDRESS)
+  return actions$.ofType(SAVE_ADDRESS)
     .pipe(
       mergeMap(action => {
-        return FireBaseClient.writeAddress(action.address).map(address => {
-          return saveAddressFinished(address);
-        })
+        if (action.address.key) {
+          // Update address
+          return FireBaseClient.writeAddress(action.address).map(res => updateAddressFinished(action.address));
+        }
+        // Save address
+        return FireBaseClient.writeAddress(action.address).map(address => saveAddressFinished(address));
       })
     );
 };

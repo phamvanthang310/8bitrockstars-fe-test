@@ -5,7 +5,7 @@ import { NavigationClose } from 'material-ui/svg-icons/index';
 const NavBar = () => {
   return (
     <AppBar
-      title="8BitRockstars - Test"
+      title="8BitRockstars"
       showMenuIconButton={false}
       iconElementLeft={<IconButton><NavigationClose/></IconButton>}
     />

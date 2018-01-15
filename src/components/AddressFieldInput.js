@@ -12,10 +12,9 @@ export class AddressFieldInput extends React.PureComponent {
       address: props.address,
       errors: []
     };
-    this.handleInputChange = this.handleInputChange.bind(this);
   }
 
-  handleInputChange(event) {
+  handleInputChange = (event) => {
     const target = event.target;
     const value = target.value;
     const name = target.name;
@@ -29,7 +28,7 @@ export class AddressFieldInput extends React.PureComponent {
       this.props.onChange(this.state.address);
       this.props.onValid(this.validate())
     });
-  }
+  };
 
   validate() {
     const {street, ward, district, city} = this.state.address;
