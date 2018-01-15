@@ -1,8 +1,9 @@
 import { combineReducers } from 'redux';
-import addresses from './Addresses';
+import { addresses, selectedAddress } from './Addresses';
 
 const rootReducer = combineReducers({
-  addresses
+  addresses,
+  selectedAddress
 });
 
 export default rootReducer

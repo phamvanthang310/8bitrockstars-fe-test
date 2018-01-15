@@ -3,6 +3,7 @@ import { Dialog, FlatButton, RaisedButton, Tab, Tabs } from 'material-ui';
 import { AddressFieldInput } from './AddressFieldInput';
 import { AddressMapInput } from './AddressMapInput';
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux';
 
 const initialAddress = {
   street: '',
@@ -12,21 +13,11 @@ const initialAddress = {
   country: ''
 };
 
-export class AddressInput extends React.PureComponent {
-  handleAddNewAddressClick = () => {
-    this.setState({
-      isDialogOpen: true
-    });
-  };
-  handleCancelClick = () => {
-    this.setState({
-      isDialogOpen: false,
-      isValid: false,
-      address: Object.assign({}, initialAddress)
-    });
-  };
+class AddressInput extends React.PureComponent {
+
   handleSaveClick = () => {
     if (this.state.isValid) {
+      console.log(this.state.address);
       this.props.actions.saveAddress(this.state.address);
       this.setState({
         isDialogOpen: false,
@@ -35,13 +26,29 @@ export class AddressInput extends React.PureComponent {
       });
     }
   };
+
+  handleAddNewAddressClick = () => {
+    this.setState({
+      isDialogOpen: true
+    });
+  };
+
+  handleCancelClick = () => {
+    this.setState({
+      isDialogOpen: false,
+      isValid: false,
+      address: Object.assign({}, initialAddress)
+    });
+  };
+  handleSelectedAddress = () => {
+    this.setState({
+      isDialogOpen: true,
+      address: this.props.selectedAddress
+    })
+  };
+
   handleAddressInput = (address) => {
     this.setState({address});
-  };
-  handleValid = (isValid) => {
-    this.setState({
-      isValid
-    });
   };
 
   constructor(props) {
@@ -49,11 +56,18 @@ export class AddressInput extends React.PureComponent {
     this.state = {
       isDialogOpen: false,
       isValid: false,
-      address: props.address || Object.assign({}, initialAddress)
+      address: Object.assign({}, initialAddress)
     };
   };
 
+  handleValid = (isValid) => {
+    this.setState({
+      isValid
+    });
+  };
+
   render() {
+    const {selectedAddress} = this.props;
     const actions = [
       <FlatButton label="Cancel" primary={false} onClick={this.handleCancelClick}/>,
       <FlatButton label="Save" primary={true} onClick={this.handleSaveClick}/>
@@ -62,6 +76,8 @@ export class AddressInput extends React.PureComponent {
     return (
       <Fragment>
         <RaisedButton secondary={true} label='Add new address' onClick={this.handleAddNewAddressClick}/>
+        <RaisedButton secondary={true} label='Edit selected address' onClick={this.handleSelectedAddress}
+                      disabled={!selectedAddress.key}/>
         <Dialog
           title="Add New Address"
           actions={actions}
@@ -84,5 +100,14 @@ export class AddressInput extends React.PureComponent {
 }
 
 AddressInput.propertyTypes = {
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
+  selectedAddress: PropTypes.object
 };
+
+const mapStateToProps = state => ({
+  selectedAddress: state.selectedAddress
+});
+
+export default connect(
+  mapStateToProps,
+)(AddressInput);

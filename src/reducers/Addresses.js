@@ -1,8 +1,11 @@
-import { ADD_ADDRESS_FINISHED, EDIT_ADDRESS, FETCH_ADDRESSES_FINISHED } from '../constants/ActionTypes';
+import { ADD_ADDRESS_FINISHED, FETCH_ADDRESSES_FINISHED, SELECT_ADDRESS } from '../constants/ActionTypes';
 
-const initialState = [];
+const initialState = {
+  addresses: [],
+  selectedAddress: {}
+};
 
-export default function addresses(state = initialState, action) {
+export function addresses(state = initialState.addresses, action) {
   switch (action.type) {
     case FETCH_ADDRESSES_FINISHED:
       return Object.assign([], action.addresses);
@@ -11,8 +14,16 @@ export default function addresses(state = initialState, action) {
         ...state,
         action.address
       ];
-    case EDIT_ADDRESS:
-    // return state.map(address)
+    default:
+      return state;
+  }
+}
+
+export function selectedAddress(state = initialState.selectedAddress, action) {
+  switch (action.type) {
+    case SELECT_ADDRESS:
+      console.log('SELECT_ADDRESS', action.address);
+      return Object.assign({}, action.address);
     default:
       return state;
   }

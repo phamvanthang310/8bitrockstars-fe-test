@@ -44,7 +44,6 @@ class FireBaseClient {
       .pipe(
         mergeMap(() => addressRef.once('value')),
         map(snapshot => {
-          console.log(snapshot);
           const item = snapshot.val();
           item['key'] = snapshot.key;
           return item;
