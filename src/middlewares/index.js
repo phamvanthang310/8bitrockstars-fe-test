@@ -1,5 +1,5 @@
 import { combineEpics, createEpicMiddleware } from 'redux-observable';
-import { fetchAddressesEpic } from './Addresses';
+import { fetchAddressesEpic, saveAddressEpic } from './Addresses';
 
-const rootEpic = combineEpics(fetchAddressesEpic);
+const rootEpic = combineEpics(fetchAddressesEpic, saveAddressEpic);
 export const epicMiddleware = createEpicMiddleware(rootEpic);

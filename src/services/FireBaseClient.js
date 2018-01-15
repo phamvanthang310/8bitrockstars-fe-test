@@ -1,5 +1,5 @@
 import * as firebase from 'firebase';
-import { map } from 'rxjs/operators';
+import { map, mergeMap } from 'rxjs/operators';
 import { Observable } from 'rxjs/Rx';
 
 class FireBaseClient {
@@ -21,7 +21,7 @@ class FireBaseClient {
       .pipe(
         map(snapshot => {
           let items = [];
-          snapshot.forEach(function (childSnapshot) {
+          snapshot.forEach(childSnapshot => {
             let item = childSnapshot.val();
             item['key'] = childSnapshot.key;
             items.push(item);
@@ -32,10 +32,24 @@ class FireBaseClient {
   }
 
   writeAddress(address) {
+    if (address.key) {
+      // Update data
+      const updates = {};
+      updates[`/addresses/${address.key}`] = address;
+      return Observable.fromPromise(this.database.ref().update(updates));
+    }
+    // Add data
     const addressRef = this.database.ref('/addresses').push();
-    addressRef.set(address).then(res => {
-      console.log('writeAddress :', res);
-    });
+    return Observable.fromPromise(addressRef.set(address))
+      .pipe(
+        mergeMap(() => addressRef.once('value')),
+        map(snapshot => {
+          console.log(snapshot);
+          const item = snapshot.val();
+          item['key'] = snapshot.key;
+          return item;
+        })
+      );
   }
 }
 

@@ -38,10 +38,10 @@ export class AddressInput extends React.PureComponent {
 
   handleSaveClick() {
     console.log(this.state.address);
+    this.props.actions.saveAddress(this.state.address);
   }
 
   handleAddressInput(address) {
-    console.log('handleAddressInput', address);
     this.setState({address});
   }
 
