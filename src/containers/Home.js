@@ -8,10 +8,12 @@ import * as AddressActions from '../actions';
 import PropTypes from 'prop-types'
 import AddressInput from '../components/AddressInput';
 import MainSection from '../components/MainSection';
+import GoogleMapClient from '../providers/GoogleMapClient';
 
 export class Home extends React.PureComponent {
   constructor(props) {
     super(props);
+    GoogleMapClient.getGeoCoding({lat: 10.8036925, lng: 106.67986219999999});
   }
 
   render() {

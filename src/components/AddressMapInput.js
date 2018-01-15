@@ -1,35 +1,26 @@
 import React, { Fragment } from 'react';
 import { RaisedButton } from 'material-ui';
+import GoogleMapClient from '../providers/GoogleMapClient';
 
 export class AddressMapInput extends React.PureComponent {
 
   constructor(props) {
     super(props);
-
     this.mapEl = {};
   }
 
-  componentDidMount() {
+  handleSelectPosition = (googleMap, marker, event) => {
+    const position = event.latLng.toJSON();
+    marker.setPosition(position);
+    this.props.onSelect(position)
+  };
+  handleUseMyCurrentLocation = () => {
     this.getCurrentLocation().then(position => {
-      console.log(position);
-      this.initGoogleMap(position);
-    }, (error) => console.log(error));
-  }
-
-  initGoogleMap(position) {
-    this.googleMap = new window.google.maps.Map(this.mapEl, {
-      center: position,
-      zoom: 13
-    });
-
-    this.marker = new window.google.maps.Marker({
-      position,
-      map: this.googleMap,
-      title: 'Click to zoom'
-    });
-
-    this.googleMap.addListener('click', (event) => this.handleSelectPosition(this.googleMap, this.marker, event));
-  }
+      this.props.onSelect(position)
+      this.googleMap.panTo(position);
+      this.marker.setPosition(position);
+    })
+  };
 
   getCurrentLocation() {
     return new Promise((resolve, reject) => {
@@ -46,19 +37,19 @@ export class AddressMapInput extends React.PureComponent {
     });
   }
 
-  handleSelectPosition = (googleMap, marker, event) => {
-    const latLng = event.latLng.toJSON();
-    console.log(latLng);
-
-    marker.setPosition(latLng)
-  };
-
-  handleUseMyCurrentLocation() {
+  componentDidMount() {
     this.getCurrentLocation().then(position => {
-      console.log('handleUseMyCurrentLocation: ', position);
-      this.googleMap.panTo(position);
-      this.marker.setPosition(position);
-    })
+      this.initGoogleMap(position);
+      this.props.onSelect(position)
+    });
+  }
+
+  initGoogleMap(position) {
+    const {googleMap, marker} = GoogleMapClient.initGoogleMap(this.mapEl, position);
+    googleMap.addListener('click', (event) => this.handleSelectPosition(googleMap, marker, event));
+
+    this.googleMap = googleMap;
+    this.marker = marker;
   }
 
   render() {

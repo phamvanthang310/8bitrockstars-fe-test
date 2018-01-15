@@ -4,6 +4,7 @@ import { AddressFieldInput } from './AddressFieldInput';
 import { AddressMapInput } from './AddressMapInput';
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux';
+import GoogleMapClient from '../providers/GoogleMapClient';
 
 const initialAddress = {
   street: '',
@@ -15,24 +16,20 @@ const initialAddress = {
 
 class AddressInput extends React.PureComponent {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      isDialogOpen: false,
-      isValid: false,
-      address: Object.assign({}, initialAddress)
-    };
-  };
-
-  handleSaveClick = () => {
+  handleSaveAddressField = () => {
     if (this.state.isValid) {
       this.props.actions.saveAddress(this.state.address);
-      this.setState({
-        isDialogOpen: false,
-        isValid: false,
-        address: Object.assign({}, initialAddress)
-      });
+      this.resetState();
     }
+  };
+  handleSaveAddressMap = () => {
+    if (this.selectedLocation) {
+      this.props.actions.saveAddress(this.selectedLocation);
+      this.resetState();
+    }
+  };
+  handleCancelClick = () => {
+    this.resetState();
   };
 
   handleAddNewAddressClick = () => {
@@ -40,19 +37,14 @@ class AddressInput extends React.PureComponent {
       isDialogOpen: true
     });
   };
-
-  handleCancelClick = () => {
-    this.setState({
-      isDialogOpen: false,
-      isValid: false,
-      address: Object.assign({}, initialAddress)
-    });
-  };
-  handleSelectedAddress = () => {
+  handleUpdateSelectedAddress = () => {
     this.setState({
       isDialogOpen: true,
       address: this.props.selectedAddress
     })
+  };
+  handlePositionSelected = (position) => {
+    GoogleMapClient.getGeoCoding(position).then(address => this.selectedLocation = address);
   };
 
   handleAddressInput = (address) => {
@@ -65,12 +57,26 @@ class AddressInput extends React.PureComponent {
     });
   };
 
+  constructor(props) {
+    super(props);
+    this.selectedLocation = null;
+    this.state = {
+      isDialogOpen: false,
+      isValid: false,
+      address: Object.assign({}, initialAddress),
+    };
+  };
+
+  resetState() {
+    this.setState({
+      isDialogOpen: false,
+      isValid: false,
+      address: Object.assign({}, initialAddress)
+    });
+  }
+
   render() {
     const {selectedAddress} = this.props;
-    const actions = [
-      <FlatButton label="Cancel" primary={false} onClick={this.handleCancelClick}/>,
-      <FlatButton label="Save" primary={true} onClick={this.handleSaveClick}/>
-    ];
 
     return (
       <Fragment>
@@ -78,12 +84,11 @@ class AddressInput extends React.PureComponent {
           <RaisedButton secondary={true} label='Add new address' onClick={this.handleAddNewAddressClick}
                         icon={<FontIcon className="fa fa-plus-circle"/>}/>
           <RaisedButton style={{marginLeft: '10px'}} secondary={true} label='Edit selected address'
-                        onClick={this.handleSelectedAddress}
+                        onClick={this.handleUpdateSelectedAddress}
                         disabled={!selectedAddress.key} icon={<FontIcon className="fa fa-edit"/>}/>
         </div>
         <Dialog
           title="Add New Address"
-          actions={actions}
           modal={true}
           open={this.state.isDialogOpen}>
           <p>Select a method you want to add: </p>
@@ -91,9 +96,17 @@ class AddressInput extends React.PureComponent {
             <Tab label="Field Input">
               <AddressFieldInput address={this.state.address} onChange={this.handleAddressInput}
                                  onValid={this.handleValid}/>
+              <div className='tab-action'>
+                <FlatButton label="Cancel" primary={false} onClick={this.handleCancelClick}/>
+                <FlatButton label="Save" primary={true} onClick={this.handleSaveAddressField}/>
+              </div>
             </Tab>
             <Tab label="Map Input">
-              <AddressMapInput/>
+              <AddressMapInput onSelect={this.handlePositionSelected}/>
+              <div className='tab-action'>
+                <FlatButton label="Cancel" primary={false} onClick={this.handleCancelClick}/>
+                <FlatButton label="Save" primary={true} onClick={this.handleSaveAddressMap}/>
+              </div>
             </Tab>
           </Tabs>
         </Dialog>

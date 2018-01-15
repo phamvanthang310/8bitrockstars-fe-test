@@ -1,6 +1,6 @@
 import { FETCH_ADDRESSES, SAVE_ADDRESS } from '../constants/ActionTypes';
 import { fullFillAddresses, saveAddressFinished, updateAddressFinished } from '../actions';
-import FireBaseClient from '../services/FireBaseClient';
+import FireBaseClient from '../providers/FireBaseClient';
 import { mergeMap } from 'rxjs/operators';
 
 export const fetchAddressesEpic = (action$, store) => {
