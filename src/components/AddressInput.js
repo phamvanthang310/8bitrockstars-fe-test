@@ -16,6 +16,16 @@ const initialAddress = {
 
 class AddressInput extends React.PureComponent {
 
+  constructor(props) {
+    super(props);
+    this.selectedLocation = null;
+    this.state = {
+      isDialogOpen: false,
+      isValid: false,
+      address: Object.assign({}, initialAddress)
+    };
+  };
+
   handleSaveAddressField = () => {
     if (this.state.isValid) {
       this.props.actions.saveAddress(this.state.address);
@@ -55,16 +65,6 @@ class AddressInput extends React.PureComponent {
     this.setState({
       isValid
     });
-  };
-
-  constructor(props) {
-    super(props);
-    this.selectedLocation = null;
-    this.state = {
-      isDialogOpen: false,
-      isValid: false,
-      address: Object.assign({}, initialAddress),
-    };
   };
 
   resetState() {

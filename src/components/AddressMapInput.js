@@ -16,7 +16,7 @@ export class AddressMapInput extends React.PureComponent {
   };
   handleUseMyCurrentLocation = () => {
     this.getCurrentLocation().then(position => {
-      this.props.onSelect(position)
+      this.props.onSelect(position);
       this.googleMap.panTo(position);
       this.marker.setPosition(position);
     })
